@@ -1,14 +1,10 @@
-# Ignore API keys and env files
+# Secrets and keys
 *.inv
+.inv
+2.inv
 .env
-.env.*
+*.env
 
-# Foundry VTT
-*.db
-
-# OS
+# Operating System Files
 .DS_Store
 Thumbs.db
-
-# Node (just in case)
-node_modules/
