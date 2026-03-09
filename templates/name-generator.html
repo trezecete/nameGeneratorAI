@@ -2,14 +2,45 @@
     <div class="form-group">
         <label for="ng-race">Race / Species</label>
         <div class="form-fields">
-            <input type="text" id="ng-race" name="race" placeholder="e.g., Elf, Dwarf, Human" required>
+            <select id="ng-race" name="race">
+                {{#each races}}
+                <option value="{{@key}}">{{this.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <p id="ng-race-description" class="notes"></p>
+    </div>
+
+    <div class="form-group" id="ng-custom-race-group" style="display: none;">
+        <label for="ng-custom-race">Custom Race Name</label>
+        <div class="form-fields">
+            <input type="text" id="ng-custom-race" name="customRace" placeholder="e.g., Tabaxi, Plasmoid">
         </div>
     </div>
-    
+
     <div class="form-group">
-        <label for="ng-culture">Culture / Background</label>
+        <label for="ng-gender">Gender / Presentation</label>
         <div class="form-fields">
-            <input type="text" id="ng-culture" name="culture" placeholder="e.g., Highborn, Viking, Cyberpunk" required>
+            <select id="ng-gender" name="gender">
+                <option value="any">Any / Random</option>
+                <option value="male">Masculine / Male</option>
+                <option value="female">Feminine / Female</option>
+                <option value="neutral">Androgynous / Neutral</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-class">Class / Profession (Optional)</label>
+        <div class="form-fields">
+            <input type="text" id="ng-class" name="class" placeholder="e.g., Wizard, Fighter, Peasant">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-culture">Culture / Background (Optional)</label>
+        <div class="form-fields">
+            <input type="text" id="ng-culture" name="culture" placeholder="e.g., Highborn, Viking, Cyberpunk">
         </div>
     </div>
 

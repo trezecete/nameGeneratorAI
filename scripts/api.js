@@ -1,6 +1,8 @@
 import { MODULE_ID } from "./settings.js";
+import { RACE_TEMPLATES } from "./templates.js";
 
-export async function generateNames(race, culture) {
+export async function generateNames(options) {
+    const { raceKey, customRace, gender, className, culture } = options;
     const apiKey = game.settings.get(MODULE_ID, "groqApiKey");
 
     if (!apiKey) {
@@ -8,9 +10,30 @@ export async function generateNames(race, culture) {
         return null;
     }
 
-    const prompt = `Generate 5 unique, creative, and fitting character names for a tabletop RPG character. 
-The character's race is "${race}" and their culture/background is "${culture}".
-Return ONLY the names, separated by commas, with no other text, numbers, or explanation.`;
+    const template = RACE_TEMPLATES[raceKey];
+    const raceName = raceKey === 'custom' ? customRace : template.label;
+
+    let promptParts = [
+        `Generate 5 unique, creative, and fitting character names for a tabletop RPG character.`,
+        `Race: ${raceName}`
+    ];
+
+    if (gender && gender !== 'any') {
+        promptParts.push(`Gender/Presentation: ${gender}`);
+    }
+
+    if (className) {
+        promptParts.push(`Class/Profession: ${className}`);
+    }
+
+    if (culture) {
+        promptParts.push(`Culture/Background: ${culture}`);
+    }
+
+    promptParts.push(`\nGuidelines specific to this race: ${template.promptNotes}`);
+    promptParts.push(`\nReturn ONLY the names, separated by commas, with no other text, numbers, or explanation.`);
+
+    const prompt = promptParts.join('\n');
 
     const url = "https://api.groq.com/openai/v1/chat/completions";
 

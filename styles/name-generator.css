@@ -33,3 +33,10 @@
 .name-generator-btn {
     margin-bottom: 5px;
 }
+
+.name-generator-form .notes {
+    font-size: 0.85em;
+    color: var(--color-text-dark-secondary);
+    margin: 5px 0 0 0;
+    font-style: italic;
+}
