@@ -1,5 +1,4 @@
 import { MODULE_ID } from "./settings.js";
-import { RACE_TEMPLATES } from "./templates.js";
 
 export async function generateNames(options) {
     const { raceKey, customRace, gender, className, culture } = options;
@@ -10,7 +9,8 @@ export async function generateNames(options) {
         return null;
     }
 
-    const template = RACE_TEMPLATES[raceKey];
+    const templates = game.settings.get(MODULE_ID, "raceTemplates");
+    const template = templates[raceKey];
     const raceName = raceKey === 'custom' ? customRace : template.label;
 
     let promptParts = [

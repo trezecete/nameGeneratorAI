@@ -1,0 +1,33 @@
+<form class="templates-editor-form">
+    <div class="templates-list">
+        {{#each templates}}
+        <div class="template-item" data-id="{{@key}}">
+            <div class="item-header">
+                <input type="text" name="templates.{{@key}}.label" value="{{this.label}}" placeholder="Race Name">
+                <a class="delete-template" title="Delete Template"><i class="fas fa-trash"></i></a>
+            </div>
+            <div class="item-body">
+                <textarea name="templates.{{@key}}.description"
+                    placeholder="Description shown in UI">{{this.description}}</textarea>
+                <textarea name="templates.{{@key}}.promptNotes"
+                    placeholder="AI Generation Guidelines">{{this.promptNotes}}</textarea>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="form-group">
+        <button type="button" id="add-template">
+            <i class="fas fa-plus"></i> Add New Race Template
+        </button>
+    </div>
+
+    <footer class="sheet-footer">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save All Templates
+        </button>
+        <button type="button" id="reset-templates">
+            <i class="fas fa-undo"></i> Reset to Defaults
+        </button>
+    </footer>
+</form>

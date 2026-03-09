@@ -1,6 +1,5 @@
 import { MODULE_ID } from "./settings.js";
 import { generateNames } from "./api.js";
-import { RACE_TEMPLATES } from "./templates.js";
 
 export class NameGeneratorApp extends FormApplication {
     static get defaultOptions() {
@@ -16,9 +15,10 @@ export class NameGeneratorApp extends FormApplication {
     }
 
     getData() {
+        const templates = game.settings.get(MODULE_ID, "raceTemplates");
         return {
             names: this.names || [],
-            races: RACE_TEMPLATES
+            races: templates
         };
     }
 
@@ -43,7 +43,8 @@ export class NameGeneratorApp extends FormApplication {
 
     _updateRaceDescription(html) {
         const selectedRace = html.find('#ng-race').val();
-        const template = RACE_TEMPLATES[selectedRace];
+        const templates = game.settings.get(MODULE_ID, "raceTemplates");
+        const template = templates[selectedRace];
 
         if (template) {
             html.find('#ng-race-description').text(template.description);
