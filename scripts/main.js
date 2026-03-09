@@ -4,6 +4,12 @@ import { NameGeneratorApp } from "./app.js";
 Hooks.once("init", () => {
     console.log(`${MODULE_ID} | Initializing Name Generator AI`);
     registerSettings();
+
+    // Auto-register API for macros
+    game.modules.get(MODULE_ID).api = {
+        NameGeneratorApp,
+        showApp: () => new NameGeneratorApp().render(true)
+    };
 });
 
 Hooks.on("renderActorDirectory", (app, html, data) => {
@@ -14,5 +20,11 @@ Hooks.on("renderActorDirectory", (app, html, data) => {
         new NameGeneratorApp().render(true);
     });
 
-    html.find('.header-actions').append(button);
+    // Try finding action-buttons first (Foundry v11/v12 standard), fallback to header-actions
+    let headerActions = html.find('.directory-header .action-buttons');
+    if (headerActions.length === 0) {
+        headerActions = html.find('.header-actions');
+    }
+
+    headerActions.append(button);
 });
