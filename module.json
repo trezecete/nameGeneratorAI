@@ -17,5 +17,7 @@
   ],
   "styles": [
     "styles/name-generator.css"
-  ]
+  ],
+  "manifest": "https://raw.githubusercontent.com/trezecete/nameGeneratorAI/master/module.json",
+  "download": "https://github.com/trezecete/nameGeneratorAI/archive/refs/heads/master.zip"
 }
