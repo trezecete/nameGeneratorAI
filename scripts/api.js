@@ -40,11 +40,11 @@ export async function generateNames(options) {
     }
 
     if (className) {
-        promptParts.push(`Class/Profession: ${className}`);
+        promptParts.push(`Class/Profession: ${className} (MUITO IMPORTANTE: Essa classe deve ter um peso 1.2x maior do que a categoria da raça na escolha das palavras)`);
     }
 
     if (culture) {
-        promptParts.push(`Culture/Background: ${culture}`);
+        promptParts.push(`Culture/Background: ${culture} (MUITO IMPORTANTE: Essa cultura deve ter um peso 1.2x maior do que a categoria da raça na escolha das palavras)`);
     }
 
     if (raceKey === 'custom') {

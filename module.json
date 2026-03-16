@@ -2,7 +2,7 @@
   "id": "name-generator-ai",
   "title": "Name Generator AI (Groq)",
   "description": "Generates character names based on race and culture using the Groq API.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "compatibility": {
     "minimum": "11",
     "verified": "12"
