@@ -48,7 +48,11 @@ export async function generateNames(options) {
     }
 
     promptParts.push(`\nOrientações específicas para esta raça: ${template.promptNotes}`);
-    promptParts.push(`\nRetorne SOMENTE os nomes, separados por vírgulas, sem nenhum outro texto, números ou explicações.`);
+    promptParts.push(`\nREGRAS DE FORMATAÇÃO ESTRITAMENTE OBRIGATÓRIAS:
+    - Retorne APENAS os 5 nomes gerados, um embaixo do outro (separados por quebra de linha).
+    - Formate cada nome como "Nome Sobrenome".
+    - PROIBIDO USAR VÍRGULAS (,) no nome ou para separar nomes.
+    - NÃO adicione números, pontos, marcadores de lista ou qualquer outra explicação.`);
 
     const prompt = promptParts.join('\n');
 
@@ -59,7 +63,7 @@ export async function generateNames(options) {
         messages: [
             {
                 role: "system",
-                content: "You are a creative name generator for fantasy RPGs. You strictly output a comma-separated list of names and nothing else."
+                content: "You are a creative name generator for fantasy RPGs. You strictly output a newline-separated list of names (Format: Name Surname) with no commas, numbers, or extra text."
             },
             {
                 role: "user",
@@ -88,7 +92,12 @@ export async function generateNames(options) {
         const data = await response.json();
         const content = data.choices[0]?.message?.content || "";
 
-        return content.split(',').map(n => n.trim()).filter(n => n.length > 0);
+        // Garante que mesmo que a IA erre o formato, a gente consiga limpar a bagunça
+        return content
+            .split(/\n|;/) // Divide por quebra de linha ou o ponto-e-vírgula que você mencionou
+            .map(n => n.replace(/,/g, ' ').replace(/\s+/g, ' ').trim()) // Se houver virgula, troca por espaço e arruma espaços duplos
+            .map(n => n.replace(/^[\d\-\.\*]+\s*/, '')) // Remove números ou pontuações de lista (ex: "1.", "-")
+            .filter(n => n.length > 0);
     } catch (error) {
         console.error(`${MODULE_ID} | Error generating names:`, error);
         ui.notifications.error("Error generating names via Groq API. Check console for details.");
