@@ -7,10 +7,26 @@
                 <a class="delete-template" title="Delete Template"><i class="fas fa-trash"></i></a>
             </div>
             <div class="item-body">
-                <textarea name="templates.{{@key}}.description"
-                    placeholder="Description shown in UI">{{this.description}}</textarea>
-                <textarea name="templates.{{@key}}.promptNotes"
-                    placeholder="AI Generation Guidelines">{{this.promptNotes}}</textarea>
+                <div class="field-item">
+                    <label>UI Description:</label>
+                    <textarea name="templates.{{@key}}.description"
+                        placeholder="Description shown to players">{{this.description}}</textarea>
+                </div>
+                <div class="field-item">
+                    <label>Word Categories (Separated by comma):</label>
+                    <input type="text" name="templates.{{@key}}.categories" value="{{this.categories}}" 
+                        placeholder="e.g. Nature, Magic, Star, Forest">
+                </div>
+                <div class="field-item">
+                    <label>Base Languages (Separated by comma):</label>
+                    <input type="text" name="templates.{{@key}}.languages" value="{{this.languages}}" 
+                        placeholder="e.g. French, Latin, Welsh">
+                </div>
+                <div class="field-item">
+                    <label>Sonority / Name Style:</label>
+                    <textarea name="templates.{{@key}}.sonority"
+                        placeholder="e.g. Melodic, soft, flowing... avoiding hard consonants.">{{this.sonority}}</textarea>
+                </div>
             </div>
         </div>
         {{/each}}

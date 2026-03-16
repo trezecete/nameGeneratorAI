@@ -12,13 +12,30 @@
 
 .name-generator-form .name-list li {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 10px;
     background: rgba(0, 0, 0, 0.1);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     border-radius: 3px;
+}
+
+.name-generator-form .name-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
     font-size: 1.1em;
+}
+
+.name-generator-form .name-logic {
+    font-size: 0.85em;
+    color: var(--color-text-dark-secondary);
+    margin-top: 6px;
+    font-style: italic;
+    border-top: 1px dashed rgba(0, 0, 0, 0.2);
+    padding-top: 6px;
+    width: 100%;
 }
 
 .name-generator-form .copy-name {
@@ -70,11 +87,28 @@
     color: #ff4444;
 }
 
+.templates-editor .field-item {
+    margin-bottom: 10px;
+}
+
+.templates-editor .field-item label {
+    display: block;
+    font-weight: bold;
+    font-size: 0.85em;
+    margin-bottom: 4px;
+    color: var(--color-text-dark-secondary);
+}
+
+.templates-editor input[type="text"],
 .templates-editor textarea {
     width: 100%;
-    min-height: 60px;
-    margin-bottom: 5px;
+    box-sizing: border-box;
     font-size: 0.9em;
+}
+
+.templates-editor textarea {
+    min-height: 50px;
+    resize: vertical;
 }
 
 .templates-editor .sheet-footer {

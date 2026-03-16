@@ -39,7 +39,9 @@ export class RaceTemplatesEditor extends FormApplication {
         templates[newKey] = {
             label: "New Race",
             description: "Description of the race names.",
-            promptNotes: "AI instructions for this race."
+            categories: "Category 1, Category 2",
+            languages: "Language 1, Language 2",
+            sonority: "Description of how the name sounds."
         };
 
         this.templates = templates;

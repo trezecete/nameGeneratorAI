@@ -55,9 +55,14 @@
         <h3>Generated Names</h3>
         <ul class="name-list">
             {{#each names}}
-            <li>
-                <span class="generated-name">{{this}}</span>
-                <a class="copy-name" title="Copy to clipboard" data-name="{{this}}"><i class="fas fa-copy"></i></a>
+            <li class="name-item-container">
+                <div class="name-header">
+                    <span class="generated-name">{{this.name}}</span>
+                    <a class="copy-name" title="Copy to clipboard" data-name="{{this.name}}"><i class="fas fa-copy"></i></a>
+                </div>
+                {{#if this.logic}}
+                <div class="name-logic">{{this.logic}}</div>
+                {{/if}}
             </li>
             {{/each}}
         </ul>

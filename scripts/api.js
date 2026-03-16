@@ -47,12 +47,26 @@ export async function generateNames(options) {
         promptParts.push(`Culture/Background: ${culture}`);
     }
 
-    promptParts.push(`\nOrientações específicas para esta raça: ${template.promptNotes}`);
+    if (raceKey === 'custom') {
+        promptParts.push(`\nLÓGICA ESPECÍFICA DESTA GERAÇÃO (Baseada nas escolhas do usuário):
+        Categorias de palavras: Baseie-se nas informações dadas
+        Idiomas para usar: Criatividade do modelo e informações passadas
+        Estilo de Sonoridade: Baseado nas informações passadas`);
+    } else {
+        const fallBackNotes = template.promptNotes ? `Geral: ${template.promptNotes}` : '';
+        promptParts.push(`\nLÓGICA ESPECÍFICA DESTA GERAÇÃO:
+        Categorias de palavras para as bases: ${template.categories || 'Aleatória'}
+        Idiomas-base recomendados para as bases: ${template.languages || 'Aleatório'}
+        Estilo de Sonoridade exigida na mescla: ${template.sonority || fallBackNotes}`);
+    }
     promptParts.push(`\nREGRAS DE FORMATAÇÃO ESTRITAMENTE OBRIGATÓRIAS:
-    - Retorne APENAS os 5 nomes gerados, um embaixo do outro (separados por quebra de linha).
-    - Formate cada nome como "Nome Sobrenome".
-    - PROIBIDO USAR VÍRGULAS (,) no nome ou para separar nomes.
-    - NÃO adicione números, pontos, marcadores de lista ou qualquer outra explicação.`);
+    - Retorne os 5 nomes seguindo EXATAMENTE este bloco de formato para cada um:
+    
+    NOME: [Nome Gerado]
+    LOGICA: [Palavra 1] ([Idioma]: [Tradução da Palavra 1]) + [Palavra 2] ([Idioma]: [Tradução da Palavra 2])
+    ---
+    
+    - É EXPRESSAMENTE PROIBIDO usar números, pontos de lista ou explicações fora desse formato.`);
 
     const prompt = promptParts.join('\n');
 
@@ -63,7 +77,7 @@ export async function generateNames(options) {
         messages: [
             {
                 role: "system",
-                content: "You are a creative name generator for fantasy RPGs. You strictly output a newline-separated list of names (Format: Name Surname) with no commas, numbers, or extra text."
+                content: "You are a creative name generator for fantasy RPGs. You strictly output names following the formatted block NOME:, LOGICA:, and ---."
             },
             {
                 role: "user",
@@ -71,7 +85,7 @@ export async function generateNames(options) {
             }
         ],
         temperature: 0.7,
-        max_tokens: 100
+        max_tokens: 250
     };
 
     try {
@@ -92,12 +106,24 @@ export async function generateNames(options) {
         const data = await response.json();
         const content = data.choices[0]?.message?.content || "";
 
-        // Garante que mesmo que a IA erre o formato, a gente consiga limpar a bagunça
-        return content
-            .split(/\n|;/) // Divide por quebra de linha ou o ponto-e-vírgula que você mencionou
-            .map(n => n.replace(/,/g, ' ').replace(/\s+/g, ' ').trim()) // Se houver virgula, troca por espaço e arruma espaços duplos
-            .map(n => n.replace(/^[\d\-\.\*]+\s*/, '')) // Remove números ou pontuações de lista (ex: "1.", "-")
-            .filter(n => n.length > 0);
+        const results = [];
+        const blocks = content.split('---');
+        
+        for (let block of blocks) {
+            const nameMatch = block.match(/NOME:\s*(.+)/i);
+            const logicMatch = block.match(/LOGICA:\s*(.+)/i);
+            
+            if (nameMatch) {
+                let name = nameMatch[1].replace(/,/g, ' ').replace(/\s+/g, ' ').replace(/^[\d\-\.\*]+\s*/, '').trim();
+                let logic = logicMatch ? logicMatch[1].trim() : "";
+                
+                if (name.length > 0) {
+                    results.push({ name, logic });
+                }
+            }
+        }
+
+        return results.length > 0 ? results : null;
     } catch (error) {
         console.error(`${MODULE_ID} | Error generating names:`, error);
         ui.notifications.error("Error generating names via Groq API. Check console for details.");
