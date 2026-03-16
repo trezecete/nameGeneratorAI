@@ -1,8 +1,5 @@
 import { MODULE_ID } from "./settings.js";
 
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.1-8b-instant";
-
 export async function generateNames(options) {
     const { raceKey, customRace, gender, className, culture } = options;
     const apiKey = game.settings.get(MODULE_ID, "groqApiKey");
@@ -16,139 +13,132 @@ export async function generateNames(options) {
     const template = templates[raceKey];
     const raceName = raceKey === 'custom' ? customRace : template.label;
 
-    try {
-        console.log(`${MODULE_ID} | Inciando Etapa 1: Selecionando palavras base...`);
-        const words = await _step1ChooseWords(template, raceName, className, culture, apiKey);
-        if (!words || words.length === 0) throw new Error("Falha na Etapa 1: Não foi possível selecionar as palavras.");
-        console.log(`${MODULE_ID} | Palavras selecionadas:`, words);
+    let promptParts = [
+        `Você é um criador de linguagens e nomes de fantasia.
 
-        console.log(`${MODULE_ID} | Inciando Etapa 2: Traduzindo palavras...`);
-        const translatedWords = await _step2Translate(words, template, apiKey);
-        if (!translatedWords || translatedWords.length === 0) throw new Error("Falha na Etapa 2: Não foi possível traduzir as palavras.");
-        console.log(`${MODULE_ID} | Palavras traduzidas:`, translatedWords);
+        Sua tarefa é criar NOMES TOTALMENTE INVENTADOS para diferentes raças de fantasia.
 
-        console.log(`${MODULE_ID} | Inciando Etapa 3: Fundindo nomes...`);
-        const results = await _step3MergeNames(translatedWords, raceName, template, apiKey, gender);
-        if (!results || results.length === 0) throw new Error("Falha na Etapa 3: Não foi possível gerar os nomes finais.");
-        console.log(`${MODULE_ID} | Nomes finais gerados:`, results);
+        ESTRUTURA DE GERAÇÃO OBRIGATÓRIA:
+        Siga este processo mental único para gerar o lote de 5 nomes:
+        1. ESCOLHA DAS 4 PALAVRAS ÂNCORA: Com base nas "Categorias de palavras", escolha 4 termos em Português.
+           - SEJA CRIATIVO: Evite clichês (Ex: Troque "Rei" por "Trono" ou "Coroa"; "Fogo" por "Labareda").
+        2. TRADUÇÃO PARA IDIOMAS DA RAÇA:
+           - REGRA DE OURO 1: Traduza pelo menos 2 das 4 palavras para os "Idiomas-base".
+           - REGRA DE OURO 2: Mantenha pelo menos 1 das 4 palavras em Português puro.
+        3. GERAÇÃO DOS 5 NOMES: Use APENAS pedaços dessas 4 palavras traduzidas como inspiração.
+           - Os 5 nomes devem ser variações harmônicas usando diferentes combinações e cortes dessas palavras.
+           - NÃO use a palavra inteira; transforme-a foneticamente para soar como um nome de fantasia real e não ridículo.
+        
+        EXEMPLO:
+        Categorias: Natureza e Magia. Idiomas: Francês e Inglês.
+        - Âncoras: Orvalho, Raiz, Éter, Bruma.
+        - Traduções: Rosée (Fr), Root (In), Éter (Pt), Mist (In).
+        - Nome 1: Roserot Mistéter
+        - Nome 2: Mistier Roseiz
+        - Nome 3: Roorter Misté
+        (...)
+        `,
+        `Gere 5 nomes de personagens únicos, criativos e adequados para um personagem de RPG de mesa seguindo EXATAMENTE essa lógica de mescla de palavras.`,
+        `Raça/Modelo: ${raceName}`
+    ];
 
-        return results;
-
-    } catch (error) {
-        console.error(`${MODULE_ID} | Erro durante a geração de nomes:`, error);
-        ui.notifications.error("Erro gerando nomes via Groq API. Verifique o console do Foundry (F12) para detalhes.");
-        return null;
+    if (gender && gender !== 'any') {
+        promptParts.push(`Gender/Presentation: ${gender}`);
     }
-}
 
-async function _callGroqAPI(systemPrompt, userPrompt, apiKey, maxTokens = 250, temperature = 0.7) {
+    if (className) {
+        promptParts.push(`Class/Profession: ${className} (MUITO IMPORTANTE: Essa classe deve ter um peso 1.2x maior do que a categoria da raça na escolha das palavras)`);
+    }
+
+    if (culture) {
+        promptParts.push(`Culture/Background: ${culture} (MUITO IMPORTANTE: Essa cultura deve ter um peso 1.2x maior do que a categoria da raça na escolha das palavras)`);
+    }
+
+    if (raceKey === 'custom') {
+        promptParts.push(`\nLÓGICA ESPECÍFICA DESTA GERAÇÃO (Baseada nas escolhas do usuário):
+        Categorias de palavras: Baseie-se nas informações dadas
+        Idiomas para usar: Criatividade do modelo e informações passadas
+        Estilo de Sonoridade: Baseado nas informações passadas`);
+    } else {
+        const fallBackNotes = template.promptNotes ? `Geral: ${template.promptNotes}` : '';
+        promptParts.push(`\nLÓGICA ESPECÍFICA DESTA GERAÇÃO:
+        Categorias de palavras para as bases: ${template.categories || 'Aleatória'}
+        Idiomas-base recomendados para as bases: ${template.languages || 'Aleatório'}
+        Estilo de Sonoridade exigida na mescla: ${template.sonority || fallBackNotes}`);
+    }
+    promptParts.push(`\nREGRAS DE FORMATAÇÃO ESTRITAMENTE OBRIGATÓRIAS:
+    1. Escreva o bloco LOGICA_GLOBAL uma única vez no topo.
+    2. Escreva os 5 nomes em blocos separados por "---".
+    
+    FORMATO ESPERADO:
+    LOGICA_GLOBAL: [Palavra 1] ([Significado] - [Idioma]) | [Palavra 2] ([Significado] - [Idioma]) | [Palavra 3] ([Significado] - [Idioma]) | [Palavra 4] ([Significado] - [Idioma])
+    ---
+    NOME: [Primeiro Nome] [Sobrenome]
+    ---
+    NOME: [Primeiro Nome] [Sobrenome]
+    ---
+    (até completar 5 nomes)`);
+
+    const prompt = promptParts.join('\n');
+
+    const url = "https://api.groq.com/openai/v1/chat/completions";
+
     const requestBody = {
-        model: MODEL,
+        model: "llama-3.1-8b-instant",
         messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt }
+            {
+                role: "system",
+                content: "You are a creative name generator. You output LOGICA_GLOBAL once, then 5 names separated by ---."
+            },
+            {
+                role: "user",
+                content: prompt
+            }
         ],
-        temperature: temperature,
-        max_tokens: maxTokens
+        temperature: 0.7,
+        max_tokens: 300
     };
 
-    const response = await fetch(GROQ_API_URL, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestBody)
-    });
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API retornou ${response.status}: ${errorText}`);
-    }
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`API returned ${response.status}: ${errorText}`);
+        }
 
-    const data = await response.json();
-    return data.choices[0]?.message?.content || "";
-}
+        const data = await response.json();
+        const content = data.choices[0]?.message?.content || "";
 
-async function _step1ChooseWords(template, raceName, className, culture, apiKey) {
-    const systemPrompt = "Você é um especialista em etimologia e criação de conceitos para RPG. Sua tarefa é extrair o significado de uma raça/classe/cultura e retornar 4 palavras em PORTUGUÊS que tenham forte ligação semântica com o personagem. SEJA CRIATIVO: Evite termos óbvios ou clichês banais (Ex: ao invés de 'Rei', use 'Soberano' ou 'Coroa'; ao invés de 'Fogo', use 'Brasa' ou 'Chama').";
-    
-    let userPrompt = `Gere EXATAMENTE 4 palavras em Português para servir de base para o nome de um personagem.\nRaça: ${raceName}\n`;
-    
-    if (template.categories) userPrompt += `Categorias de Inspiração: ${template.categories}\n`;
-    if (className) userPrompt += `Classe/Profissão (PESO ALTO NA ESCOLHA): ${className}\n`;
-    if (culture) userPrompt += `Cultura/Background (PESO ALTO NA ESCOLHA): ${culture}\n`;
+        const results = [];
+        const globalLogicMatch = content.match(/LOGICA_GLOBAL:\s*(.+)/i);
+        const globalLogic = globalLogicMatch ? globalLogicMatch[1].trim() : "";
+        
+        const blocks = content.split('---');
 
-    userPrompt += `\nRetorne EXATAMENTE no formato de lista separada por vírgulas, sem mais nenhum texto, numeração ou explicação. \nExemplo de saída esperada:\nBrasa, Escudo, Coroa, Tempestade`;
-
-    const content = await _callGroqAPI(systemPrompt, userPrompt, apiKey, 80, 0.8);
-    // Limpar e extrair as palavras
-    const words = content.replace(/[.]/g, '').split(',').map(w => w.trim()).filter(w => w.length > 0);
-    return words.slice(0, 4);
-}
-
-async function _step2Translate(words, template, apiKey) {
-    const systemPrompt = "Você é um tradutor especialista em linguística e criação de mundos de fantasia. Você recebe 4 palavras em Português e deve traduzi-las de acordo com regras estritas.";
-    
-    let userPrompt = `Palavras base em Português: ${words.join(', ')}\nIdiomas-base sugeridos para a raça (escolha dentre esses): ${template.languages || 'Qualquer idioma de fantasia'}\n`;
-    
-    userPrompt += `\nTraduza essas 4 palavras para os idiomas acima obedecendo a seguinte REGRA DE OURO ESTRITA:
-- SEMPRE 3 palavras DEVEM ser traduzidas para os "Idiomas-base" exógenos.
-- SEMPRE EXATAMENTE 1 das 4 palavras DEVE ser mantida INTACTA em Português (sem tradução, representando a raiz nativa).
-
-Retorne EXATAMENTE no formato linha a linha abaixo, e NADA MAIS:
-[Palavra Traduzida 1] ([Palavra PT 1] - [Idioma Alvo 1])
-[Palavra Traduzida 2] ([Palavra PT 2] - [Idioma Alvo 2])
-[Palavra Traduzida 3] ([Palavra PT 3] - [Idioma Alvo 3])
-[Palavra Original 4] ([Palavra PT 4] - Pt)`;
-
-    const content = await _callGroqAPI(systemPrompt, userPrompt, apiKey, 150, 0.4);
-    // O retorno esperado são as 4 linhas
-    const lines = content.split('\n').map(l => l.trim()).filter(line => line.length > 0);
-    return lines;
-}
-
-async function _step3MergeNames(translatedLines, raceName, template, apiKey, gender) {
-    const systemPrompt = "Você é um exímio criador de Nomes de Fantasia. Sua especialidade é pegar pedaços silábicos de palavras estruturadas, cortá-las e fundi-las para criar Nomes e Sobrenomes lindíssimos e que fluam bem para a fala.";
-    
-    let userPrompt = `As fundações para a construção morfológica dos nossos nomes são estas 4 raízes:\n${translatedLines.join('\n')}\n\n`;
-    userPrompt += `Raça: ${raceName}\n`;
-    if (gender && gender !== 'any') userPrompt += `Gênero/Apresentação do indivíduo: ${gender}\n`;
-    if (template.sonority || (template.promptNotes && template.promptNotes.trim() !== '')) {
-        userPrompt += `Estilo Músico-Linguístico (Sonoridade Sugerida): ${template.sonority || template.promptNotes}\n`;
-    }
-
-    userPrompt += `\nREGRAS DE CRIAÇÃO OBRIGATÓRIAS:
-1. Gere 5 opções diferentes de nomes de personagens (Nome e Sobrenome separados por espaço).
-2. Para cada personagem, mescle sílabas retiradas ÚNICA E EXCLUSIVAMENTE das 4 palavras fornecidas.
-3. Não use a palavra-base inteira se ela for de uso comum, desconstrua morfologicamente transformando-as em prefixos e sufixos!
-4. Exemplo Metodológico: Raiz (Root - In) + Leão (Leon - Es) + Espada (Espada - Pt) = "Roolen Sangadra"
-
-FORMATO DE RETORNO ESTrito PARA OS 5 PERSONAGENS:
-LOGICA: [Explique brevemente de onde tirou os PEDAÇOS formatando como: "Palavra 1 + Palavra 2 | Palavra 3 + Palavra 4"]
-NOME: [Nome Final Inédito gerado a partir da Lógica] [Sobrenome Inédito]
----
-
-É PROIBIDO USAR MARCADORES NUMÉRICOS, BULLETS COMO (1.) OU INCLUIR TEXTOS EXTRAS. Apenas repita a estrutura LOGICA:\\nNOME:\\n--- cinco vezes.`;
-
-    const content = await _callGroqAPI(systemPrompt, userPrompt, apiKey, 400, 0.7);
-    
-    const results = [];
-    const blocks = content.split('---');
-
-    for (let block of blocks) {
-        const nameMatch = block.match(/NOME:\s*(.+)/i);
-        const logicMatch = block.match(/LOGICA:\s*(.+)/i);
-
-        if (nameMatch) {
-            let name = nameMatch[1].replace(/,/g, ' ').replace(/\s+/g, ' ').replace(/^[\d\-\.\*]+\s*/, '').trim();
-            let logic = logicMatch ? logicMatch[1].trim() : "";
-
-            if (name.length > 0) {
-                results.push({ name, logic });
+        for (let block of blocks) {
+            const nameMatch = block.match(/NOME:\s*(.+)/i);
+            
+            if (nameMatch) {
+                let name = nameMatch[1].replace(/,/g, ' ').replace(/\s+/g, ' ').replace(/^[\d\-\.\*]+\s*/, '').trim();
+                
+                if (name.length > 0) {
+                    results.push({ name, logic: globalLogic });
+                }
             }
         }
+
+        return results.length > 0 ? results : null;
+    } catch (error) {
+        console.error(`${MODULE_ID} | Error generating names:`, error);
+        ui.notifications.error("Error generating names via Groq API. Check console for details.");
+        return null;
     }
-    
-    return results;
 }
