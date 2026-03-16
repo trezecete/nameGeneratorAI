@@ -14,8 +14,25 @@ export async function generateNames(options) {
     const raceName = raceKey === 'custom' ? customRace : template.label;
 
     let promptParts = [
-        `Generate 5 unique, creative, and fitting character names for a tabletop RPG character.`,
-        `Race: ${raceName}`
+        `Você é um criador de linguagens e nomes de fantasia.
+
+        Sua tarefa é criar NOMES TOTALMENTE INVENTADOS para diferentes raças de fantasia.
+
+        REGRAS GERAIS E LÓGICA DE CRIAÇÃO:
+        - Os nomes DEVEM ter Nome e Sobrenome.
+        - Os nomes devem ser criados a partir da junção de duas palavras relacionadas à categoria/descrição da raça.
+        - Se a raça tiver idiomas definidos, você deve pensar nas palavras-base nesses idiomas antes de misturá-las.
+        - Misture sílabas e pedaços dessas palavras. Corte as palavras no meio e junte-as para formar um nome novo, pronunciável e único (Ex: inicio de uma + final da outra).
+        - NÃO use palavras do nosso mundo de forma direta. Deforme-as até se tornarem originais e soarem naturais para a cultura da raça.
+        
+        EXEMPLO DO PROCESSO (Apenas para basear sua lógica):
+        Temas: Natureza e Magia. Idiomas: Francês e Inglês.
+        Ideia 1: Folha (Fr: feuille) + Chuva (En: rain) -> feu + ain = Feuain
+        Ideia 2: Cair (Pt: cai) + Céu (En: sky) -> ca + sky = Casky
+        Resultado: Feuain Casky
+        `,
+        `Gere 5 nomes de personagens únicos, criativos e adequados para um personagem de RPG de mesa seguindo EXATAMENTE essa lógica de mescla de palavras.`,
+        `Raça/Modelo: ${raceName}`
     ];
 
     if (gender && gender !== 'any') {
@@ -30,8 +47,8 @@ export async function generateNames(options) {
         promptParts.push(`Culture/Background: ${culture}`);
     }
 
-    promptParts.push(`\nGuidelines specific to this race: ${template.promptNotes}`);
-    promptParts.push(`\nReturn ONLY the names, separated by commas, with no other text, numbers, or explanation.`);
+    promptParts.push(`\nOrientações específicas para esta raça: ${template.promptNotes}`);
+    promptParts.push(`\nRetorne SOMENTE os nomes, separados por vírgulas, sem nenhum outro texto, números ou explicações.`);
 
     const prompt = promptParts.join('\n');
 

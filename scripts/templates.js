@@ -1,47 +1,47 @@
 export const RACE_TEMPLATES = {
     "human": {
         label: "Human",
-        description: "Humans have a wide variety of names, often reflecting their unique real-world-inspired cultures, geography, or family lineage.",
-        promptNotes: "Human names are highly varied and adaptable. They should strongly reflect the character's culture and background, drawing inspiration from distinct regional fantasy dialects."
+        description: "Nomes humanos variam muito dependendo de suas inspirações do mundo real, cultura ou linhagem familiar.",
+        promptNotes: "Categorias para inspirar as palavras: Realeza, Cotidiano, Batalha, Comércio, Terra, Mar. Idiomas-base recomendados: Inglês, Espanhol, Alemão. Sonoridade: Variada, autêntica e adaptável para soar como um povo diverso."
     },
     "elf": {
         label: "Elf",
-        description: "Elven names often sound musical, melodic, flowing, and inspired by nature, magic, or ancient language.",
-        promptNotes: "Elven names should sound inherently melodic, flowing, soft, and somewhat ancient or nature-inspired, typically relying on gentle consonants, double vowels, and elegant suffixes."
+        description: "Nomes élficos soam musicais, melódicos e costumam refletir a natureza, a magia ou uma linguagem antiga.",
+        promptNotes: "Categorias para inspirar as palavras: Natureza, Magia, Estrelas, Luz, Floresta, Prata. Idiomas-base recomendados: Francês, Latim, Galês, Finlandês. Sonoridade: Melódica, suave, fluida e majestosa, evitando consoantes muito duras."
     },
     "dwarf": {
         label: "Dwarf",
-        description: "Dwarven names tend to feature hard consonants, reflecting strength, stone, metal, and proud clan history.",
-        promptNotes: "Dwarven names should feature hard, sharp consonants (like k, g, d, r, z), sounding sturdy, traditional, clan-oriented, and rough-hewn."
+        description: "Nomes anões usam consoantes duras, refletindo força, pedra, metal e o orgulho de seu clã.",
+        promptNotes: "Categorias para inspirar as palavras: Pedra, Ferro, Aço, Montanha, Forja, Honra, Barba. Idiomas-base recomendados: Alemão, Nórdico Antigo, Russo. Sonoridade: Robusta, clânica, focada em consoantes duras e marcantes (k, g, d, r, z)."
     },
     "orc": {
         label: "Orc / Half-Orc",
-        description: "Orcish names are usually guttural, harsh, and often related to physical strength, combat, or tribal standing.",
-        promptNotes: "Orcish names should sound guttural, harsh, and aggressive, utilizing sharp plosives and avoiding overly soft or long melodic syllables."
+        description: "Nomes órquicos são guturais, ásperos e ligados à força física, combate ou status tribal.",
+        promptNotes: "Categorias para inspirar as palavras: Sangue, Força, Osso, Fúria, Guerra, Fogo, Presa. Idiomas-base recomendados: Turco, Mongol, sons tribais livres. Sonoridade: Gutural, áspera, agressiva, utilizando sons fortes e cortes secos de sílaba."
     },
     "halfling": {
         label: "Halfling",
-        description: "Halfling names are cheerful, home-loving, sometimes comical or double-barreled like 'Underbough' or 'Tealeaf'.",
-        promptNotes: "Halfling names should sound friendly, rustic, and welcoming, often resembling old English countryside names, featuring nature-themed surnames."
+        description: "Nomes alegres, caseiros, às vezes cômicos ou com sobrenomes compostos (ex: pé-peludo).",
+        promptNotes: "Categorias para inspirar as palavras: Comida, Conforto, Fruta, Colheita, Chá, Toca, Grama. Idiomas-base recomendados: Inglês antigo, Holandês. Sonoridade: Amigável, rústica, inocente e acolhedora."
     },
     "dragonborn": {
         label: "Dragonborn",
-        description: "Dragonborn names are proud, clan-oriented, and majestic, with hissing or sharp Draconic syllables.",
-        promptNotes: "Dragonborn names should sound proud, archaic, sharp, and majestic, often featuring hisses, hard stops, or 'draconic' syllables."
+        description: "Nomes orgulhosos, ligados ao clã, majestosos e com sílabas sibilantes dracônicas.",
+        promptNotes: "Categorias para inspirar as palavras: Escama, Fogo, Dragão, Clã, Orgulho, Ouro, Sopro. Idiomas-base recomendados: Latim, Grego, Sânscrito. Sonoridade: Orgulhosa, majestosa, silábica, forte e imponente, podendo ter tons sibilantes."
     },
     "tiefling": {
         label: "Tiefling",
-        description: "Tieflings can have infernal names reflecting their fiendish heritage, or 'virtue' names describing a concept or goal.",
-        promptNotes: "Tiefling names should EITHER sound infernal (sharp, rhythmic, sinister tones) OR be 'virtue' names which are single descriptive English words representing a concept (like 'Hope', 'Sorrow', 'Creed', 'Poetry')."
+        description: "Nomes infernais que refletem herança demoníaca, ou nomes de 'virtude' (conceitos ou ideias).",
+        promptNotes: "Categorias para inspirar as palavras: Pecado, Sombra, Fogo, Pacto, Chifre, Noite, Promessa. Idiomas-base recomendados: Espanhol, Italiano, Latim. Sonoridade: Sinistra, rítmica, sedutora; pode também ser formada unicamente por palavras de virtudes (ex: Esperança, Tormento)."
     },
     "gnome": {
         label: "Gnome",
-        description: "Gnome names are playful, tinkery, and often lengthy, reflecting their eccentric, inventive, and lively nature.",
-        promptNotes: "Gnomish names should sound quirky, inventive, bouncy, and slightly frantic or eccentric. Often have whimsical sounds and nature or tinkerer-themed surnames."
+        description: "Nomes brincalhões, relacionados a engenhocas, frequentemente longos ou excêntricos.",
+        promptNotes: "Categorias para inspirar as palavras: Engrenagem, Ilusão, Bugiganga, Brincadeira, Brilho, Mola, Risada. Idiomas-base recomendados: Italiano, Esperanto. Sonoridade: Extravagante, inventiva, saltitante, frenética e exótica."
     },
     "custom": {
         label: "Custom / Other",
-        description: "Use this option to specify completely custom characteristics, entering the race name and background below.",
-        promptNotes: "The user has provided a custom race. Read the provided characteristics and generate a name that distinctly fits."
+        description: "Defina sua própria raça e background.",
+        promptNotes: "Utilize as descrições e características passadas livremente pelo usuário. Extraia delas as Categorias, os Idiomas e os tons da Sonoridade para formar as palavras combinadas do nome."
     }
 };
