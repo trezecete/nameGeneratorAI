@@ -19,14 +19,17 @@ export async function generateNames(options) {
         Sua tarefa é criar NOMES TOTALMENTE INVENTADOS para diferentes raças de fantasia.
 
         REGRAS DE CRIAÇÃO PASSO-A-PASSO:
-        Para criar os Nomes e Sobrenomes de cada personagem, siga este fluxo criativo:
+        Para criar os Nomes e Sobrenomes de cada personagem, siga este fluxo criativo OBRIGATÓRIO:
         1. Leia as "Categorias de palavras" (fornecidas mais abaixo neste prompt) e escolha 4 palavras em Português que tenham forte ligação com o personagem selecionado.
             - Ex: Se a categoria diz Natureza e Batalha, você pode escolher: Raiz, Leão, Espada, Sangue.
         2. Traduza essas 4 palavras para os "Idiomas-base" sugeridos (fornecidos mais abaixo). Você pode variar os idiomas entre as 4 palavras.
             - Ex: Raiz -> Root (In), Leão -> Leon (Es).
-        3. FUSÃO DO NOME: Pegue 2 dessas palavras traduzidas, corte pedaços de cada uma e junte-as para criar um primeiro nome totalmente novo e único.
-        4. FUSÃO DO SOBRENOME: Faça o mesmo processo de fusão com as outras 2 palavras traduzidas para criar o sobrenome.
-        5. SONORIDADE: O resultado final (Nome e Sobrenome) deve soar natural e respeitar o "Estilo de Sonoridade" exigido.
+        3. FUSÃO DO NOME (Escreva a LÓGICA primeiro): Pegue 2 dessas palavras traduzidas.
+            - Ex: Root (Raiz - In) + Leon (Leão - Es)
+        4. FUSÃO DO SOBRENOME (Escreva a LÓGICA primeiro): Pegue as outras 2 palavras traduzidas.
+            - Ex: Sword (Espada - In) + Sangre (Sangue - Es)
+        5. RESULTADO FINAL: Agora sim, baseado nas duas fusões acima, corte pedaços de cada palavra e crie o Primeiro Nome e o Sobrenome de forma que soem naturais.
+            - Ex: Roleon Swongre
         `,
         `Gere 5 nomes de personagens únicos, criativos e adequados para um personagem de RPG de mesa seguindo EXATAMENTE essa lógica de mescla de palavras.`,
         `Raça/Modelo: ${raceName}`
@@ -57,13 +60,17 @@ export async function generateNames(options) {
         Estilo de Sonoridade exigida na mescla: ${template.sonority || fallBackNotes}`);
     }
     promptParts.push(`\nREGRAS DE FORMATAÇÃO ESTRITAMENTE OBRIGATÓRIAS:
-    - Retorne os 5 nomes seguindo EXATAMENTE este bloco de formato para cada um:
+    - Retorne os 5 nomes seguindo EXATAMENTE este bloco de formato para cada um (LÓGICA VEM PRIMEIRO):
     
-    NOME: [Nome Gerado] [Sobrenome Gerado]
     LOGICA: [Palavra Traduzida 1] ([Significado em Português 1] - [Idioma 1]) + [Palavra Traduzida 2] ([Significado em Português 2] - [Idioma 2]) | [Palavra Traduzida 3] ([Significado em Português 3] - [Idioma 3]) + [Palavra Traduzida 4] ([Significado em Português 4] - [Idioma 4])
+    NOME: [Primeiro Nome Gerado a partir da Lógica] [Sobrenome Gerado a partir da Lógica]
     ---
     
-    - Exemplo prático do que espero na LÓGICA: Coin (Moeda - In) + Espada (Espada - Pt) | Win (Vencer - In) + Basura (Maçã - Es)
+    - Exemplo prático do que espero:
+    LOGICA: Coin (Moeda - In) + Espada (Espada - Pt) | Win (Vencer - In) + Basura (Maçã - Es)
+    NOME: Copad Winsure
+    ---
+    
     - É EXPRESSAMENTE PROIBIDO usar números de lista (1. 2.), marcadores extras ou explicações fora desse formato.`);
 
     const prompt = promptParts.join('\n');
