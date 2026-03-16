@@ -18,16 +18,15 @@ export async function generateNames(options) {
 
         Sua tarefa é criar NOMES TOTALMENTE INVENTADOS para diferentes raças de fantasia.
 
-        REGRAS GERAIS E LÓGICA DE CRIAÇÃO (Siga este passo a passo ESTRITAMENTE):
-        1. A partir das "Categorias de palavras", escolha 4 palavras em Português que combinem com a raça (Ex: Moeda, Espada, Vencer, Maçã).
-        2. Converta (Traduza) cada uma dessas 4 palavras para os "Idiomas-base" definidos para a raça (Caso a raça tenha mais de um idioma, varie as traduções entre eles ou misture com o próprio Português).
-            - Ex: Se os idiomas são Inglês e Espanhol: Moeda -> Coin (In), Vencer -> Win (In), Maçã -> Basura (Es), Espada -> Espada (Pt).
-        3. Junte duas das palavras traduzidas (mesclando sílabas e cortando) para criar o NOME.
-            - Ex: Coin + Espada -> Copad
-        4. Junte as outras duas palavras traduzidas (mesclando sílabas e cortando) para criar o SOBRENOME.
-            - Ex: Win + Basura -> Winsure
-        5. Forme o NOME COMPLETO.
-            - Ex: Copad Winsure
+        REGRAS DE CRIAÇÃO PASSO-A-PASSO:
+        Para criar os Nomes e Sobrenomes de cada personagem, siga este fluxo criativo:
+        1. Leia as "Categorias de palavras" (fornecidas mais abaixo neste prompt) e escolha 4 palavras em Português que tenham forte ligação com o personagem selecionado.
+            - Ex: Se a categoria diz Natureza e Batalha, você pode escolher: Raiz, Leão, Espada, Sangue.
+        2. Traduza essas 4 palavras para os "Idiomas-base" sugeridos (fornecidos mais abaixo). Você pode variar os idiomas entre as 4 palavras.
+            - Ex: Raiz -> Root (In), Leão -> Leon (Es).
+        3. FUSÃO DO NOME: Pegue 2 dessas palavras traduzidas, corte pedaços de cada uma e junte-as para criar um primeiro nome totalmente novo e único.
+        4. FUSÃO DO SOBRENOME: Faça o mesmo processo de fusão com as outras 2 palavras traduzidas para criar o sobrenome.
+        5. SONORIDADE: O resultado final (Nome e Sobrenome) deve soar natural e respeitar o "Estilo de Sonoridade" exigido.
         `,
         `Gere 5 nomes de personagens únicos, criativos e adequados para um personagem de RPG de mesa seguindo EXATAMENTE essa lógica de mescla de palavras.`,
         `Raça/Modelo: ${raceName}`
