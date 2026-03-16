@@ -18,18 +18,16 @@ export async function generateNames(options) {
 
         Sua tarefa é criar NOMES TOTALMENTE INVENTADOS para diferentes raças de fantasia.
 
-        REGRAS GERAIS E LÓGICA DE CRIAÇÃO:
-        - Os nomes DEVEM ter Nome e Sobrenome.
-        - Os nomes devem ser criados a partir da junção de duas palavras relacionadas à categoria/descrição da raça.
-        - Se a raça tiver idiomas definidos, você deve pensar nas palavras-base nesses idiomas antes de misturá-las.
-        - Misture sílabas e pedaços dessas palavras. Corte as palavras no meio e junte-as para formar um nome novo, pronunciável e único (Ex: inicio de uma + final da outra).
-        - NÃO use palavras do nosso mundo de forma direta. Deforme-as até se tornarem originais e soarem naturais para a cultura da raça.
-        
-        EXEMPLO DO PROCESSO (Apenas para basear sua lógica):
-        Temas: Natureza e Magia. Idiomas: Francês e Inglês.
-        Ideia 1: Folha (Fr: feuille) + Chuva (En: rain) -> feu + ain = Feuain
-        Ideia 2: Cair (Pt: cai) + Céu (En: sky) -> ca + sky = Casky
-        Resultado: Feuain Casky
+        REGRAS GERAIS E LÓGICA DE CRIAÇÃO (Siga este passo a passo ESTRITAMENTE):
+        1. A partir das "Categorias de palavras", escolha 4 palavras em Português que combinem com a raça (Ex: Moeda, Espada, Vencer, Maçã).
+        2. Converta (Traduza) cada uma dessas 4 palavras para os "Idiomas-base" definidos para a raça (Caso a raça tenha mais de um idioma, varie as traduções entre eles ou misture com o próprio Português).
+            - Ex: Se os idiomas são Inglês e Espanhol: Moeda -> Coin (In), Vencer -> Win (In), Maçã -> Basura (Es), Espada -> Espada (Pt).
+        3. Junte duas das palavras traduzidas (mesclando sílabas e cortando) para criar o NOME.
+            - Ex: Coin + Espada -> Copad
+        4. Junte as outras duas palavras traduzidas (mesclando sílabas e cortando) para criar o SOBRENOME.
+            - Ex: Win + Basura -> Winsure
+        5. Forme o NOME COMPLETO.
+            - Ex: Copad Winsure
         `,
         `Gere 5 nomes de personagens únicos, criativos e adequados para um personagem de RPG de mesa seguindo EXATAMENTE essa lógica de mescla de palavras.`,
         `Raça/Modelo: ${raceName}`
@@ -62,11 +60,12 @@ export async function generateNames(options) {
     promptParts.push(`\nREGRAS DE FORMATAÇÃO ESTRITAMENTE OBRIGATÓRIAS:
     - Retorne os 5 nomes seguindo EXATAMENTE este bloco de formato para cada um:
     
-    NOME: [Nome Gerado]
-    LOGICA: [Palavra 1] ([Idioma]: [Tradução da Palavra 1]) + [Palavra 2] ([Idioma]: [Tradução da Palavra 2])
+    NOME: [Nome Gerado] [Sobrenome Gerado]
+    LOGICA: [Palavra Traduzida 1] ([Significado em Português 1] - [Idioma 1]) + [Palavra Traduzida 2] ([Significado em Português 2] - [Idioma 2]) | [Palavra Traduzida 3] ([Significado em Português 3] - [Idioma 3]) + [Palavra Traduzida 4] ([Significado em Português 4] - [Idioma 4])
     ---
     
-    - É EXPRESSAMENTE PROIBIDO usar números, pontos de lista ou explicações fora desse formato.`);
+    - Exemplo prático do que espero na LÓGICA: Coin (Moeda - In) + Espada (Espada - Pt) | Win (Vencer - In) + Basura (Maçã - Es)
+    - É EXPRESSAMENTE PROIBIDO usar números de lista (1. 2.), marcadores extras ou explicações fora desse formato.`);
 
     const prompt = promptParts.join('\n');
 
