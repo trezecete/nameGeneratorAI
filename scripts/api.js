@@ -21,9 +21,12 @@ export async function generateNames(options) {
         REGRAS DE CRIAÇÃO PASSO-A-PASSO:
         Para criar os Nomes e Sobrenomes de cada personagem, siga este fluxo criativo OBRIGATÓRIO:
         1. Leia as "Categorias de palavras" (fornecidas mais abaixo neste prompt) e escolha 4 palavras em Português que tenham forte ligação com o personagem selecionado.
+            - SEJA CRIATIVO: Evite termos óbvios ou clichês banais (Ex: ao invés de "Rei", use "Soberano", "Coroa" ou "Trono"; ao invés de "Fogo", use "Brasa" ou "Chama").
             - Ex: Se a categoria diz Natureza e Batalha, você pode escolher: Raiz, Leão, Espada, Sangue.
-        2. Traduza essas 4 palavras para os "Idiomas-base" sugeridos (fornecidos mais abaixo). Você pode variar os idiomas entre as 4 palavras.
-            - Ex: Raiz -> Root (In), Leão -> Leon (Es).
+        2. Traduza essas 4 palavras para os "Idiomas-base" sugeridos (fornecidos mais abaixo). Você DEVE variar os idiomas entre as 4 palavras obedecendo a REGRA DE OURO:
+            - REGRA DE OURO 1: PELO MENOS 1 das 4 palavras DEVE ser traduzida para o idioma-base real da raça.
+            - REGRA DE OURO 2: PELO MENOS 1 das 4 palavras DEVE ser mantida em Português sem tradução.
+            - Ex: Raiz -> Root (In), Leão -> Leon (Es), Espada -> Espada (Pt - Mantido), Sangre -> Sangue (Pt - Mantido).
         3. FUSÃO DO NOME (Escreva a LÓGICA primeiro): Pegue 2 dessas palavras traduzidas.
             - Ex: Root (Raiz - In) + Leon (Leão - Es)
         4. FUSÃO DO SOBRENOME (Escreva a LÓGICA primeiro): Pegue as outras 2 palavras traduzidas.
